@@ -10,7 +10,7 @@ A JSON object containing:
 - `layer_name` - {array}. Names of the bioclimatic/environmental layers to use as covariates. Currently only uses static covariates. See [here under 'Layer names'](https://github.com/disarm-platform/fn-covariate-extractor/blob/master/SPECS.md) for a list of options. 
 - `offset` - {Base64 encoded raster of offset or URL to valid `.tif`}. Raster representing the (population) offset. Currently only accepts a single offset which is used across all time periods.
 - `date_start_end` - {array}. Array of 2 values representing the start and end times over which points were observed. 
-- `aggregation_period` - {integer}. Time periods over which to aggregate points. One of `day`, `week`, `month`, `year` or `whole` where `whole` considers all points in a single time period (equivalent to assuming a spatial only model). Any time periods that are not complete are dropped - i.e. if the start date is mid month and `period` is month, observations from that month will be dropped.
+- `aggregation_period` - {string}. Time periods over which to aggregate points. One of `day`, `week`, `month`, `year` or `whole` where `whole` considers all points in a single time period (equivalent to assuming a spatial only model). Any time periods that are not complete are dropped - i.e. if the start date is mid month and `period` is month, observations from that month will be dropped.
 - `density` - {integer}. Density of quadrature points to generate (points / square km)
 - `boundary` - {GeoJSON or URL to GeoJSON}. Required. Polygon representing the area over which points are observed.
 - `prediction_frame` - {Boolean}. Do you want to also return a data frame required for prediction (i.e. raster cells)?

@@ -46,9 +46,10 @@
   },
   "layer_name": ["elev_m", "dist_to_water_m", "bioclim1"],
   "offset": "https://www.dropbox.com/s/mwjpdzxyu6csuss/swz_pop.tif?dl=1",
+  "resolution": 1,
   "date_start_end": ["01-05-2015", "01-08-2015"],
   "aggregation_period": "month",
   "density": 0.001,
-  "boundary": "https://www.dropbox.com/s/q8s3hrjiz6kyj21/swz_adm0.geojson?dl=1",
   "prediction_frame": "true"
+
 }

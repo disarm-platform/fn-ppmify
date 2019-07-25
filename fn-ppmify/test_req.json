@@ -1,49 +1,5 @@
 {
-"points":
-	{
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {
-        	"date": "2015-05-01"
-        },
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            31.39068603515625,
-            -26.241692799340115
-          ]
-        }
-      },
-      {
-        "type": "Feature",
-        "properties": {
-        	"date": "2015-06-01"
-        },
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            31.6680908203125,
-            -26.470573022375085
-          ]
-        }
-      },
-      {
-        "type": "Feature",
-        "properties": {
-        	"date": "2015-07-01"
-        },
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            31.1737060546875,
-            -26.645003827815252
-          ]
-        }
-      }
-    ]
-  },
+"points":"https://www.dropbox.com/s/jnkg2xioalb3jez/test_points_swz.geojson?dl=1",
   "layer_name": ["elev_m", "dist_to_water_m", "bioclim1"],
   "offset": "https://www.dropbox.com/s/mwjpdzxyu6csuss/swz_pop.tif?dl=1",
   "resolution": 1,

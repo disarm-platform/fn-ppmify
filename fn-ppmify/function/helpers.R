@@ -2,7 +2,7 @@ library(lubridate)
 library(velox)
 
 get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
-  
+
   # First identify which are the local_cases and integration rows
   # in the ppm object
   ppm_int_points <- ppmx[ppmx$points==0,]
@@ -24,9 +24,9 @@ get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
     polys[[i]] <- sp::Polygons(list(sp::Polygon(pcrds)), ID = as.character(i))
   }
   spoly <- sp::SpatialPolygons(polys)
-  
+
   # Extract from offset raster
-  offset_raster_velox <- velox(offset_raster)
+  offset_raster_velox <- velox(offset_raster_non_case_pixels)
   ppm_int_points$weights <- offset_raster_velox$extract(spoly, fun = function(x){sum(x, na.rm = TRUE)})
 
   # Remove any points with 0 offset
@@ -47,7 +47,7 @@ get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
 # First aggregate any cases occuring in the same pixel in the same month
 # # loop through each month and identify any cases in the same pixel
 aggregate_points_space_time <- function(points, ppmx, num_periods, reference_raster){
-  
+
       ppm_cases_points <- ppmx[ppmx$points==1,]
       ppm_cases_points_counts <- ppm_cases_points[FALSE,]
       for(i in 1:num_periods){

@@ -1,4 +1,5 @@
 library(downloader)
+library(sf)
 
 function(params) {
   # TODO: Write when we have a specific need

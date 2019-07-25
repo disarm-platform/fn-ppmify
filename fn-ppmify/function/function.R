@@ -1,6 +1,6 @@
 library(ppmify)
 source("function/helpers.R")
-
+library(httr)
 
 function(params) {
   # run function and catch result
@@ -43,5 +43,50 @@ function(params) {
   
   # divide the offset by the number of cases in each cell
   ppm_df$weights <- ppm_df$weights/ppm_df$regression_weights
-  return(ppm_df)
+  
+  # Get covariate values at data and prediction points
+  ##### AT data points
+  ppm_df_sf <- st_as_sf(SpatialPoints(ppm_df[,c("x", "y")]))
+  input_data_list <- list(
+    points = geojson_list(ppm_df_sf),
+    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15)))
+  )
+  
+  response <-
+    httr::POST(
+      url = "https://faas.srv.disarm.io/function/fn-covariate-extractor",
+      body = as.json(input_data_list),
+      content_type_json(),
+      timeout(300)
+    )
+  
+  response_content <- content(response)
+  ppm_df_sf_with_covar <- st_read(as.json(response_content$result), quiet = TRUE)
+  
+  # Merge with ppm_df 
+  ppm_df <- cbind(ppm_df, as.data.frame(ppm_df_sf_with_covar))
+
+  ##### At prediction points
+  pred_point_coords <- coordinates(reference_raster)[which(!is.na(reference_raster[])),]
+  pred_points_sf <- st_as_sf(SpatialPoints(pred_point_coords))
+  input_data_list_pred_points <- list(
+    points = geojson_list(pred_points_sf),
+    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15)))
+  )
+  
+  response_pred_points <-
+    httr::POST(
+      url = "https://faas.srv.disarm.io/function/fn-covariate-extractor",
+      body = as.json(input_data_list_pred_points),
+      content_type_json(),
+      timeout(300)
+    )
+  
+  response_content_pred_points <- content(response_pred_points)
+  pred_points_with_covar <- st_read(as.json(response_content_pred_points$result), quiet = TRUE)
+  ppm_df_pred <- cbind(pred_points_with_covar, pred_point_coords)
+  
+  
+  return(list(ppm_df = ppm_df,
+              ppm_df_pred = ppm_df_pred))
 }

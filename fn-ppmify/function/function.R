@@ -85,7 +85,7 @@ function(params) {
   response_content_pred_points <- content(response_pred_points)
   pred_points_with_covar <- st_read(as.json(response_content_pred_points$result), quiet = TRUE)
   ppm_df_pred <- cbind(pred_points_with_covar, pred_point_coords)
-  
+  ppm_df_pred$offset <- offset_raster[which(!is.na(offset_raster[]))]
   
   return(list(ppm_df = ppm_df,
               ppm_df_pred = ppm_df_pred))

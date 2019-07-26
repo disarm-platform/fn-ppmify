@@ -18,7 +18,7 @@ function(params) {
                          method = "grid")
   
   # Aggregate points in space/time (i.e. aggregate points in same pixel)
-  ppm_cases_points_counts <- aggregate_points_space_time(points, ppmx, 3, reference_raster)
+  ppm_cases_points_counts <- aggregate_points_space_time(points, ppmx, 3, params$date_start_end, reference_raster)
   
   # Make these population extractions the weights
   ppm_cases_points_counts$weights <- raster::extract(offset_raster,

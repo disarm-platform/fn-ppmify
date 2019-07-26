@@ -47,15 +47,15 @@ get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
 # Deal with case points
 # First aggregate any cases occuring in the same pixel in the same month
 # # loop through each month and identify any cases in the same pixel
-aggregate_points_space_time <- function(points, ppmx, num_periods, reference_raster){
+aggregate_points_space_time <- function(points, ppmx, num_periods, date_start_end, reference_raster){
 
       ppm_cases_points <- ppmx[ppmx$points==1,]
       ppm_cases_points_counts <- ppm_cases_points[FALSE,]
       
       # Define date breaks
-      dates <- seq(ymd(params$date_start_end[1]), ymd(params$date_start_end[2]), 1)
+      dates <- seq(ymd(date_start_end[1]), ymd(date_start_end[2]), 1)
       date_breaks <- c(levels(cut.Date(dates, num_periods, right=TRUE, include.lowest = TRUE)),
-                       params$date_start_end[2])
+                       date_start_end[2])
       
       for(i in 1:num_periods){
         

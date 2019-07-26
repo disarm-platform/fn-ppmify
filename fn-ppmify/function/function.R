@@ -66,6 +66,10 @@ function(params) {
   # Merge with ppm_df 
   ppm_df <- cbind(ppm_df, as.data.frame(ppm_df_sf_with_covar))
 
+  if(params$prediction_frame==FALSE){
+    return(list(ppm_df))
+  }else{
+  
   ##### At prediction points
   pred_point_coords <- coordinates(reference_raster)[which(!is.na(reference_raster[])),]
   pred_points_sf <- st_as_sf(SpatialPoints(pred_point_coords))
@@ -89,4 +93,5 @@ function(params) {
   
   return(list(ppm_df = ppm_df,
               ppm_df_pred = ppm_df_pred))
+  }
 }

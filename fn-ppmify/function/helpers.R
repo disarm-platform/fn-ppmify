@@ -6,6 +6,7 @@ get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
   # First identify which are the local_cases and integration rows
   # in the ppm object
   ppm_int_points <- ppmx[ppmx$points==0,]
+  ppm_case_points_coords <- ppmx[ppmx$points==1,c("x", "y")]
   
   # extract population within each voronoi polygon around each integration point
   # First remove any pixels with cases as you need to estimate population in pixels without cases
@@ -15,7 +16,7 @@ get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
   
   offset_raster_non_case_pixels <- offset_raster
   offset_raster_non_case_pixels[raster::cellFromXY(offset_raster_non_case_pixels,
-                                                   points_coords)] <- NA
+                                                   ppm_case_points_coords)] <- NA
   
   polys <- vector(mode = "list", length = length(tiles))
   for (i in seq(along = polys)) {
@@ -70,7 +71,7 @@ aggregate_points_space_time <- function(points, ppmx, num_periods, reference_ras
           cases_period_trimmed <- cases_period[match(cell_counts$Group.1, cases_period$case_pixel),]
           
           # Aggregate case coordinates to be the centroid of the pixel
-          cases_period_trimmed[,c("x","y")] <- sp::coordinates(offset_raster)[cases_period_trimmed$case_pixel,]
+          cases_period_trimmed[,c("x","y")] <- sp::coordinates(reference_raster)[cases_period_trimmed$case_pixel,]
           
           # change number of points to be aggregate number
           cases_period_trimmed$points <- cell_counts$x

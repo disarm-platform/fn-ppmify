@@ -12,7 +12,7 @@ function(params) {
   if(substr(params$points, 1, 4)=="http"){
     params$points <- st_read(params$points)
   }else{
-    params$points <- st_read(as.json(params$points))
+    params$points <- st_read(as.json(params$points), quiet = TRUE)
   }
   
   # Download offset

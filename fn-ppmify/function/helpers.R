@@ -51,9 +51,15 @@ aggregate_points_space_time <- function(points, ppmx, num_periods, reference_ras
 
       ppm_cases_points <- ppmx[ppmx$points==1,]
       ppm_cases_points_counts <- ppm_cases_points[FALSE,]
+      
+      # Define date breaks
+      dates <- seq(ymd(params$date_start_end[1]), ymd(params$date_start_end[2]), 1)
+      date_breaks <- c(levels(cut.Date(dates, num_periods, right=TRUE, include.lowest = TRUE)),
+                       params$date_start_end[2])
+      
       for(i in 1:num_periods){
         
-        cases_model_period <- as.numeric(cut.Date(ymd(points$date), num_periods))
+        cases_model_period <- as.numeric(cut.Date(ymd(points$date), ymd(date_breaks)))
         cases_period <- ppm_cases_points[cases_model_period==i,]
         cases_period$period <- i
         

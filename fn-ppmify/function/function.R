@@ -8,7 +8,7 @@ function(params) {
   points <- params$points
   exposure_raster <- params$exposure
   prediction_exposure_raster <- params$prediction_exposure
-  prediction_exposure_raster <- resample(prediction_exposure_raster, exposure_raster)
+  prediction_exposure_raster <- raster::resample(prediction_exposure_raster, exposure_raster)
   reference_raster <- exposure_raster # TODO - allow this to be controlled as parameter in function when exposure not provided using boundary and resolution
   points_coords <- st_coordinates(points)
   

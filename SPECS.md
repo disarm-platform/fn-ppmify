@@ -27,7 +27,7 @@ A JSON object containing:
 A JSON object 'ppm_df' containing the following fields:
 - `x`. Longitude in decimal degrees
 - `y`. Latitude in decimal degrees
-- `exposure`. Population offset for that point in space and time. 
+- `exposure`. Populations for that point in space and time to be used as offset (when logged). 
 - `period`. A number 1 through number of layers as determined by `date_start_end` and `aggregation_period`.
 - `outcome`. {integer} Whether the point is an observation (1) or a quadrature point (0). 
 - `regression_weights`. {integer} Number of `outcomes` per space-time cell, to be used as a regression weight
@@ -35,4 +35,4 @@ A JSON object 'ppm_df' containing the following fields:
 
 Note that other values of layers specified in `layer_name` will appear as additional fields.
 
-If `prediction_frame == `TRUE` a nested JSON with 'ppm_df` and 'ppm_df_pred', a similarly structured JSON object of prediction points (without `points` field), will be returned.  Note that `ppm_df_pred` does not include `period`.
+If `prediction_frame == `TRUE` a nested JSON with 'ppm_df` and 'ppm_df_pred', a similarly structured JSON object of prediction points (without `outcome` field), will be returned.  Note that `ppm_df_pred` does not include `period`.

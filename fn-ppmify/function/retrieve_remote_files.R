@@ -10,7 +10,7 @@ function(params) {
 
   # Get points if URL used
   if(substr(params$points, 1, 4)=="http"){
-    params$points <- st_read(params$points)
+    params$points <- st_read(params$points, quiet = TRUE)
   }else{
     params$points <- st_read(as.json(params$points), quiet = TRUE)
   }

@@ -67,7 +67,7 @@ function(params) {
   ppm_df <- cbind(ppm_df, as.data.frame(ppm_df_sf_with_covar))
 
   if(params$prediction_frame==FALSE){
-    return(list(ppm_df))
+    return(list(ppm_df = ppm_df))
   }else{
   
   ##### At prediction points

@@ -23,7 +23,7 @@ function(params) {
   ppm_cases_points_counts <- aggregate_points_space_time(points, ppmx, 3, params$date_start_end, reference_raster)
   
   # Make these population extractions the weights
-  ppm_cases_points_counts$weights <- raster::extract(exposure_raster,
+  ppm_cases_points_counts$exposure <- raster::extract(exposure_raster,
                                                      cbind(ppm_cases_points_counts$x, ppm_cases_points_counts$y))
   
   # If an exposure (population) is provided, change the weights to be scaled by population

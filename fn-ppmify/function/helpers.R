@@ -1,7 +1,7 @@
 library(lubridate)
 library(velox)
 
-get_int_points_exposure_weights <- function(ppmx, offset_raster, num_periods){
+get_int_points_exposure_weights <- function(ppmx, exposure_raster, num_periods){
 
   # First identify which are the local_cases and integration rows
   # in the ppm object
@@ -14,8 +14,8 @@ get_int_points_exposure_weights <- function(ppmx, offset_raster, num_periods){
   tiles <- deldir::tile.list(dd)
   
   
-  offset_raster_non_case_pixels <- offset_raster
-  offset_raster_non_case_pixels[raster::cellFromXY(offset_raster_non_case_pixels,
+  exposure_raster_non_case_pixels <- exposure_raster
+  exposure_raster_non_case_pixels[raster::cellFromXY(exposure_raster_non_case_pixels,
                                                    ppm_case_points_coords)] <- NA
   
   polys <- vector(mode = "list", length = length(tiles))
@@ -27,11 +27,11 @@ get_int_points_exposure_weights <- function(ppmx, offset_raster, num_periods){
   spoly <- sp::SpatialPolygons(polys)
 
   # Extract from offset raster
-  offset_raster_velox <- velox(offset_raster_non_case_pixels)
-  ppm_int_points$weights <- offset_raster_velox$extract(spoly, fun = function(x){sum(x, na.rm = TRUE)})
+  exposure_raster_velox <- velox(exposure_raster_non_case_pixels)
+  ppm_int_points$exposure <- exposure_raster_velox$extract(spoly, fun = function(x){sum(x, na.rm = TRUE)})
 
   # Remove any points with 0 offset
-  ppm_int_points <- ppm_int_points[-which(ppm_int_points$weights <= 0),]
+  ppm_int_points <- ppm_int_points[-which(ppm_int_points$exposure <= 0),]
   
   # For a temporal model
   # Repeat the ppm integration points 12 times for each month

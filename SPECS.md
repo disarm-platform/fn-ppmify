@@ -15,7 +15,7 @@ A JSON object containing:
 - `num_periods` - {Integer}. Number of time periods over which to aggregate points, where `1` considers all points in a single time period (equivalent to assuming a spatial only model). Defaults to `1`. 
 - `density` - {integer}. Required. Density of quadrature points to generate (points / square km)
 - `prediction_frame` - {Boolean}. Do you want to also return a data frame required for prediction (i.e. raster cells)? Defaults to FALSE.
-
+- `prediction_offset` - {Base64 encoded raster of offset or URL to valid `.tif`}. Optional offset raster to use for prediction. This may be different to the modeling offset if `points` arose from a different population to that you wish to predict to. Automatically resampled to the same resolution as `offset`. Defaults to `offset`. 
  
 
 ## Constraints
@@ -24,7 +24,7 @@ A JSON object containing:
 
 ## Response
 
-A JSON object 'model_frame' containing the following fields:
+A JSON object 'ppm_df' containing the following fields:
 - `lng`. Longitude in decimal degrees
 - `lat`. Latitude in decimal degrees
 - `weights`. Population offset for that point in space and time. 
@@ -35,4 +35,4 @@ A JSON object 'model_frame' containing the following fields:
 
 Note that other values of layers specified in `layer_name` will appear as additional fields.
 
-If `prediction_frame == TRUE` a nested JSON with 'model_frame` and 'prediction_frame' a similarly structured JSON object of prediction points (without `points` field) will be returned.  
+If `prediction_frame == `TRUE` a nested JSON with 'ppm_df` and 'ppm_df_pred', a similarly structured JSON object of prediction points (without `points` field), will be returned.  Note that `ppm_df_pred` does not include `period`.

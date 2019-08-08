@@ -13,7 +13,7 @@ main = function () {
     # checks for existence of required parameters, return error if any problems
     # checks types/structure of all parameters, return error if any problems
     # as required, replace any external URLs with data
-    preprocess_params(params)
+    params <- preprocess_params(params)
     
     # if any parameters refer to remote files, try to download and 
     # replace parameter with local/temp file reference, return error if any problems

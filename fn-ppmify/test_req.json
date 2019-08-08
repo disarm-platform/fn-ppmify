@@ -1,10 +1,10 @@
 {
 "points":"https://www.dropbox.com/s/jnkg2xioalb3jez/test_points_swz.geojson?dl=1",
   "layer_name": ["elev_m", "dist_to_water_m", "bioclim1"],
-  "offset": "https://www.dropbox.com/s/mwjpdzxyu6csuss/swz_pop.tif?dl=1",
-  "resolution": 1,
+  "offset": "https://www.dropbox.com/s/ws6h9x60sggwdv5/swz_pop_seek_treat.tif?dl=1",
   "date_start_end": ["2018-01-1", "2018-12-31"],
   "num_periods": 3,
   "density": 0.05,
-  "prediction_frame": "FALSE"
+  "prediction_frame": "FALSE",
+  "prediction_offset": "https://www.dropbox.com/s/mwjpdzxyu6csuss/swz_pop.tif?dl=1"
 }

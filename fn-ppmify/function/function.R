@@ -7,6 +7,8 @@ function(params) {
 
   points <- params$points
   offset_raster <- params$offset
+  prediction_offest_raster <- params$prediction_offset
+  prediction_offest_raster <- resample(prediction_offest_raster, offset_raster)
   reference_raster <- offset_raster # TODO - allow this to be controlled as parameter in function when offset not provided using boundary and resolution
   points_coords <- st_coordinates(points)
   
@@ -49,7 +51,8 @@ function(params) {
   ppm_df_sf <- st_as_sf(SpatialPoints(ppm_df[,c("x", "y")]))
   input_data_list <- list(
     points = geojson_list(ppm_df_sf),
-    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15)))
+    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15))),
+    resolution = params$resolution
   )
   
   response <-
@@ -89,7 +92,7 @@ function(params) {
   response_content_pred_points <- content(response_pred_points)
   pred_points_with_covar <- st_read(as.json(response_content_pred_points$result), quiet = TRUE)
   ppm_df_pred <- cbind(pred_points_with_covar, pred_point_coords)
-  ppm_df_pred$offset <- offset_raster[which(!is.na(offset_raster[]))]
+  ppm_df_pred$offset <- prediction_offest_raster[which(!is.na(offset_raster[]))]
   
   return(list(ppm_df = ppm_df,
               ppm_df_pred = ppm_df_pred))

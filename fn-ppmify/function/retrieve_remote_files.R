@@ -24,6 +24,14 @@ function(params) {
   params$offset <- raster(temp_file)
   }
   
+  if(!is.null(params$prediction_offset)){
+    temp_file <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".tif")
+    
+    download(params$prediction_offset,
+             destfile = temp_file)
+    params$prediction_offset <- raster(temp_file)
+  }
+  
   # Download any covariates
   if(!is.null(params$covariates)){
     temp_file <- tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".tif")

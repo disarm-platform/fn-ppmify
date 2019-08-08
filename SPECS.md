@@ -25,8 +25,8 @@ A JSON object containing:
 ## Response
 
 A JSON object 'ppm_df' containing the following fields:
-- `lng`. Longitude in decimal degrees
-- `lat`. Latitude in decimal degrees
+- `x`. Longitude in decimal degrees
+- `y`. Latitude in decimal degrees
 - `exposure`. Population offset for that point in space and time. 
 - `period`. A number 1 through number of layers as determined by `date_start_end` and `aggregation_period`.
 - `outcome`. {integer} Whether the point is an observation (1) or a quadrature point (0). 

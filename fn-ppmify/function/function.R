@@ -68,6 +68,9 @@ function(params) {
   
   # Merge with ppm_df 
   ppm_df <- cbind(ppm_df, as.data.frame(ppm_df_sf_with_covar))
+  
+  # Drop unnessecary columns
+  ppm_df <- subset(ppm_df, select=-c(weights, points, geometry))
 
   if(params$prediction_frame==FALSE){
     return(list(ppm_df = ppm_df))
@@ -93,6 +96,10 @@ function(params) {
   pred_points_with_covar <- st_read(as.json(response_content_pred_points$result), quiet = TRUE)
   ppm_df_pred <- cbind(pred_points_with_covar, pred_point_coords)
   ppm_df_pred$exposure <- prediction_exposure_raster[which(!is.na(exposure_raster[]))]
+  
+  # Drop unnessecary columns
+  ppm_df_pred <- as.data.frame(ppm_df_pred)
+  ppm_df_pred <- subset(ppm_df_pred, select=-c(geometry))
   
   return(list(ppm_df = ppm_df,
               ppm_df_pred = ppm_df_pred))

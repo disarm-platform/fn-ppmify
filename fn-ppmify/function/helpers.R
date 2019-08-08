@@ -1,7 +1,7 @@
 library(lubridate)
 library(velox)
 
-get_int_points_offset_weights <- function(ppmx, offset_raster, num_periods){
+get_int_points_exposure_weights <- function(ppmx, offset_raster, num_periods){
 
   # First identify which are the local_cases and integration rows
   # in the ppm object

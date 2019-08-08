@@ -6,16 +6,16 @@ function(params) {
   # run function and catch result
 
   points <- params$points
-  offset_raster <- params$offset
-  prediction_offest_raster <- params$prediction_offset
-  prediction_offest_raster <- resample(prediction_offest_raster, offset_raster)
-  reference_raster <- offset_raster # TODO - allow this to be controlled as parameter in function when offset not provided using boundary and resolution
+  exposure_raster <- params$exposure
+  prediction_exposure_raster <- params$prediction_exposure
+  prediction_exposure_raster <- resample(prediction_exposure_raster, exposure_raster)
+  reference_raster <- exposure_raster # TODO - allow this to be controlled as parameter in function when exposure not provided using boundary and resolution
   points_coords <- st_coordinates(points)
   
   # Make ppmify object
   ppmx <- ppmify::ppmify(points_coords, 
-                         area = offset_raster,
-                         #covariates = offset_raster, 
+                         area = exposure_raster,
+                         #covariates = exposure_raster, 
                          density = params$density, #TODO change to be automatic
                          method = "grid")
   
@@ -23,12 +23,12 @@ function(params) {
   ppm_cases_points_counts <- aggregate_points_space_time(points, ppmx, 3, params$date_start_end, reference_raster)
   
   # Make these population extractions the weights
-  ppm_cases_points_counts$weights <- raster::extract(offset_raster,
+  ppm_cases_points_counts$weights <- raster::extract(exposure_raster,
                                                      cbind(ppm_cases_points_counts$x, ppm_cases_points_counts$y))
   
-  # If an offset (population) is provided, change the weights to be scaled by population
-  if(!is.null(params$offset)){
-    ppm_int_points_period <- get_int_points_offset_weights(ppmx, offset_raster, params$num_periods)
+  # If an exposure (population) is provided, change the weights to be scaled by population
+  if(!is.null(params$exposure)){
+    ppm_int_points_period <- get_int_points_exposure_weights(ppmx, exposure_raster, params$num_periods)
   }
   
   # add model month column for integration points (already generated as 'month')
@@ -43,7 +43,7 @@ function(params) {
   ppm_df$regression_weights <- ppm_df$points
   ppm_df$regression_weights[ppm_df$regression_weights == 0] <- 1
   
-  # divide the offset by the number of cases in each cell
+  # divide the exposure by the number of cases in each cell
   ppm_df$weights <- ppm_df$weights/ppm_df$regression_weights
   
   # Get covariate values at data and prediction points
@@ -51,7 +51,7 @@ function(params) {
   ppm_df_sf <- st_as_sf(SpatialPoints(ppm_df[,c("x", "y")]))
   input_data_list <- list(
     points = geojson_list(ppm_df_sf),
-    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15))),
+    layer_names = params$layer_name,
     resolution = params$resolution
   )
   
@@ -78,7 +78,7 @@ function(params) {
   pred_points_sf <- st_as_sf(SpatialPoints(pred_point_coords))
   input_data_list_pred_points <- list(
     points = geojson_list(pred_points_sf),
-    layer_names = c("elev_m", "dist_to_water_m", paste0("bioclim", c(1, 4, 12, 15)))
+    layer_names = params$layer_name
   )
   
   response_pred_points <-
@@ -92,7 +92,7 @@ function(params) {
   response_content_pred_points <- content(response_pred_points)
   pred_points_with_covar <- st_read(as.json(response_content_pred_points$result), quiet = TRUE)
   ppm_df_pred <- cbind(pred_points_with_covar, pred_point_coords)
-  ppm_df_pred$offset <- prediction_offest_raster[which(!is.na(offset_raster[]))]
+  ppm_df_pred$exposure <- prediction_exposure_raster[which(!is.na(exposure_raster[]))]
   
   return(list(ppm_df = ppm_df,
               ppm_df_pred = ppm_df_pred))

@@ -5,7 +5,7 @@ functions:
   fn-ppmify:
     lang: dockerfile
     handler: ./fn-ppmify
-    image: disarm/fn-ppmify:0.0.3
+    image: disarm/fn-ppmify:0.0.4
     environment:
       exec_timeout: 600
       write_timeout: 700

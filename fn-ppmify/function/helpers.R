@@ -1,22 +1,17 @@
 library(lubridate)
 library(velox)
 
-get_int_points_exposure_weights <- function(ppmx, exposure_raster, num_periods){
+get_int_points_exposure_weights <- function(ppmx, ppm_cases_points_counts, exposure_raster, num_periods){
 
   # First identify which are the local_cases and integration rows
   # in the ppm object
   ppm_int_points <- ppmx[ppmx$points==0,]
-  ppm_case_points_coords <- ppmx[ppmx$points==1,c("x", "y")]
-  
+
   # extract population within each voronoi polygon around each integration point
   # First remove any pixels with cases as you need to estimate population in pixels without cases
   dd <- deldir::deldir(ppm_int_points$x, ppm_int_points$y)
   tiles <- deldir::tile.list(dd)
-  
-  
-  exposure_raster_non_case_pixels <- exposure_raster
-  exposure_raster_non_case_pixels[raster::cellFromXY(exposure_raster_non_case_pixels,
-                                                   ppm_case_points_coords)] <- NA
+
   
   polys <- vector(mode = "list", length = length(tiles))
   for (i in seq(along = polys)) {
@@ -25,22 +20,26 @@ get_int_points_exposure_weights <- function(ppmx, exposure_raster, num_periods){
     polys[[i]] <- sp::Polygons(list(sp::Polygon(pcrds)), ID = as.character(i))
   }
   spoly <- sp::SpatialPolygons(polys)
+  
+  ppm_int_points_period <- NULL
+  for(j in 1:num_periods){
+    exposure_raster_non_case_pixels <- exposure_raster
+    ppm_case_points_coords <- ppm_cases_points_counts[ppm_cases_points_counts$period == j, c("x", "y")]
+    exposure_raster_non_case_pixels[raster::cellFromXY(exposure_raster_non_case_pixels,
+                                                    ppm_case_points_coords)] <- NA
 
   # Extract from offset raster
   exposure_raster_velox <- velox(exposure_raster_non_case_pixels)
   ppm_int_points$exposure <- exposure_raster_velox$extract(spoly, fun = function(x){sum(x, na.rm = TRUE)})
-
-  # Remove any points with 0 offset
-  ppm_int_points <- ppm_int_points[-which(ppm_int_points$exposure <= 0),]
   
-  # For a temporal model
-  # Repeat the ppm integration points 12 times for each month
-  ppm_int_points_period <- NULL
-  
-  for(i in 1:num_periods){
-    ppm_int_points$period <- i
+  # bind with previous periods
+    ppm_int_points$period <- j
     ppm_int_points_period <- rbind(ppm_int_points_period, ppm_int_points)
   }
+  
+  # Remove any points with 0 offset
+  ppm_int_points_period <- ppm_int_points_period[-which(ppm_int_points_period$exposure <= 0),]
+  
   return(ppm_int_points_period)
 }  
 

@@ -28,7 +28,8 @@ function(params) {
   
   # If an exposure (population) is provided, change the weights to be scaled by population
   if(!is.null(params$exposure)){
-    ppm_int_points_period <- get_int_points_exposure_weights(ppmx, exposure_raster, params$num_periods)
+    ppm_int_points_period <- get_int_points_exposure_weights(ppmx, ppm_cases_points_counts,
+                                                             exposure_raster, params$num_periods)
   }
   
   # add model month column for integration points (already generated as 'month')

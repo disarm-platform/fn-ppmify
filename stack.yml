@@ -5,10 +5,12 @@ functions:
   fn-ppmify:
     lang: dockerfile
     handler: ./fn-ppmify
-    image: disarm/fn-ppmify:0.0.5
+    image: disarm/fn-ppmify:0.1.0
     environment:
       exec_timeout: 600
       write_timeout: 700
       read_timeout: 700
       combine_output: false
       # write_debug: true
+    labels:
+      com.openfaas.scale.zero: true

@@ -3,9 +3,9 @@ provider:
   gateway: https://faas.srv.disarm.io
 functions:
   fn-ppmify:
-    lang: dockerfile
-    handler: ./fn-ppmify
-    image: disarm/fn-ppmify:0.1.0
+    lang: r-geospatial
+    handler: ./function
+    image: disarm/fn-ppmify:0.2.0
     environment:
       exec_timeout: 600
       write_timeout: 700

@@ -1,5 +1,6 @@
 install.packages(c('jsonlite',
                    'geojsonio',
-                   'velox'))
+                   'velox',
+                   'downloader'))
 
 devtools::install_github('goldingn/ppmify')
